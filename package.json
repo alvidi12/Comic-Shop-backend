@@ -1,0 +1,40 @@
+{
+  "name": "comic-shop-backend",
+  "version": "1.0.0",
+  "description": "npm install express mongoose cors dotenv\r npm install bcryptjs jsonwebtoken\r npm install nodemon --save-dev",
+  "main": "src/server.js",
+  
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alvidi12/-Comic-Shop-backend.git"
+  },
+
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+
+  "bugs": {
+    "url": "https://github.com/alvidi12/-Comic-Shop-backend/issues"
+  },
+
+  "homepage": "https://github.com/alvidi12/-Comic-Shop-backend#readme",
+
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.20.0"
+  },
+
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
