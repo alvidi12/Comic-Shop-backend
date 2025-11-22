@@ -5,7 +5,7 @@ const User = require('../models/User');
 
 const router = express.Router();
 
-// Registro
+//  REGISTRO DE USUARIOS
 router.post('/register', async (req, res) => {
   try {
     const { nombre, email, password } = req.body;
@@ -31,11 +31,32 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login
+//  LOGIN (incluye caso especial del ADMIN LOCAL)
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    //LOGIN DEL ADMIN LOCAL (NO PASA POR MongoDB)
+    if (email === "admin1234@admin.cl" && password === "admin1234") {
+      const token = jwt.sign(
+        { id: "ADMIN_LOCAL", email, rol: "admin" },
+        process.env.JWT_SECRET,
+        { expiresIn: "8h" }
+      );
+
+      return res.json({
+        message: "Login correcto (Administrador Local)",
+        token,
+        user: {
+          id: "ADMIN_LOCAL",
+          nombre: "Administrador",
+          email,
+          rol: "admin"
+        }
+      });
+    }
+
+    //LOGIN NORMAL
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'Credenciales inválidas' });
 
