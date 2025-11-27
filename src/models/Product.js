@@ -20,6 +20,8 @@ const productSchema = new mongoose.Schema(
     precio: { type: Number, required: true },
     imagen: { type: String, default: "" },
 
+    link: { type: String, default: "" },
+
   },
   {
     timestamps: true
