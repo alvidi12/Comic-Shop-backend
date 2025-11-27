@@ -2,10 +2,11 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-//  REGISTRO DE USUARIOS
+// REGISTRO
 router.post('/register', async (req, res) => {
   try {
     const { nombre, email, password } = req.body;
@@ -25,18 +26,23 @@ router.post('/register', async (req, res) => {
       rol: 'user'
     });
 
-    res.status(201).json({ message: 'Usuario registrado correctamente', userId: user._id });
+    res.status(201).json({ 
+      message: 'Usuario registrado correctamente',
+      userId: user._id 
+    });
+
   } catch (error) {
     res.status(500).json({ message: 'Error en el registro', error: error.message });
   }
 });
 
-//  LOGIN (incluye caso especial del ADMIN LOCAL)
+
+// LOGIN
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    //LOGIN DEL ADMIN LOCAL (NO PASA POR MongoDB)
+    // ADMIN LOCAL
     if (email === "admin1234@admin.cl" && password === "admin1234") {
       const token = jwt.sign(
         { id: "ADMIN_LOCAL", email, rol: "admin" },
@@ -56,7 +62,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    //LOGIN NORMAL
+    // LOGIN NORMAL
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'Credenciales inválidas' });
 
@@ -79,9 +85,19 @@ router.post('/login', async (req, res) => {
         rol: user.rol
       }
     });
+
   } catch (error) {
     res.status(500).json({ message: 'Error en el login', error: error.message });
   }
+});
+
+
+// **VALIDAR TOKEN (LO ÚNICO QUE SE AGREGA)**
+router.get("/validate", authMiddleware, (req, res) => {
+  res.status(200).json({
+    message: "Token válido",
+    user: req.user
+  });
 });
 
 module.exports = router;
